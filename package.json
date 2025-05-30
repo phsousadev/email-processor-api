@@ -1,0 +1,27 @@
+{
+  "name": "email-processor-api",
+  "version": "1.0.0",
+  "description": "sistema de envio de e-mails assíncrono e resiliente.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "node build/server.js",
+    "build": "tsup src --out-dir build"
+  },
+  "keywords": [],
+  "author": "Pedro Sousa <pedrohigor.dev@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@rocketseat/eslint-config": "2.2.2",
+    "@types/node": "22.15.29",
+    "eslint": "8.57.1",
+    "tsup": "8.5.0",
+    "tsx": "4.19.4",
+    "typescript": "5.8.3"
+  },
+  "dependencies": {
+    "dotenv": "16.5.0",
+    "fastify": "5.3.3",
+    "zod": "3.25.42"
+  }
+}
