@@ -1,0 +1,9 @@
+services:
+  email-processor-pg:
+    image: bitnami/postgresql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME=email_processor_user
+      - POSTGRESQL_PASSWORD=pass@123
+      - POSTGRESQL_DATABASE=email_processor_db
