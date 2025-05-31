@@ -7,3 +7,31 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum EmailStatus {
+  PENDING
+  PROCESSING
+  SENT
+  FAILED
+}
+
+model EmailMessage {
+  id        String          @id @default(uuid())
+  to        String
+  subject   String
+  body      String
+  status    EmailStatus
+  attempts  Int             @default(0)
+  lastError String?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  errorLogs EmailErrorLog[]
+}
+
+model EmailErrorLog {
+  id             String       @id @default(uuid())
+  emailMessage   EmailMessage @relation(fields: [emailMessageId], references: [id], onDelete: Cascade)
+  emailMessageId String
+  errorMessage   String
+  createdAt      DateTime     @default(now())
+}
