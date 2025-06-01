@@ -1,9 +1,24 @@
 services:
   email-processor-pg:
-    image: bitnami/postgresql
+    image: bitnami/postgresql:15
+    container_name: email-processor-pg
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRESQL_USERNAME=email_processor_user
       - POSTGRESQL_PASSWORD=pass@123
       - POSTGRESQL_DATABASE=email_processor_db
+    volumes:
+      - pgdata:/bitnami/postgresql
+
+  redis:
+    image: redis:7
+    container_name: email-processor-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+  redisdata:

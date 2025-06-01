@@ -1,3 +1,4 @@
+import { emailProcessingQueue } from '@/infra/producers/email-producer'
 import { EmailMessageRepository } from '@/repositories/email-message-repository'
 
 interface ISendEmailMessageRequest {
@@ -16,6 +17,8 @@ export class SendEmailMessageUseCase {
       body,
       status: 'SENT',
     })
+
+    if (email?.id) await emailProcessingQueue(email.id)
 
     return {
       email,
