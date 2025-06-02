@@ -7,7 +7,8 @@
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
-    "worker:dev": "tsx watch src/infra/workers/email.worker.ts"
+    "worker:dev": "tsx watch src/infra/workers/email.worker.ts",
+    "list:jobs": "tsx src/lib/list-jobs.ts"
   },
   "keywords": [],
   "author": "Pedro Sousa <pedrohigor.dev@gmail.com>",
