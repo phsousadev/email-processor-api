@@ -1,4 +1,4 @@
-import { EmailMessageFactoryUseCase } from '@/http/use-cases/factories/email-message-factory'
+import { SendEmailMessageFactoryUseCase } from '@/http/use-cases/factories/send-email-message-factory'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
@@ -22,7 +22,7 @@ export async function sendEmail(request: FastifyRequest, reply: FastifyReply) {
 
   const { to, subject, body } = sendEmailBodySchema.parse(request.body)
 
-  const sendEmailUseCase = EmailMessageFactoryUseCase()
+  const sendEmailUseCase = SendEmailMessageFactoryUseCase()
 
   await sendEmailUseCase.execute({
     to,
