@@ -1,0 +1,11 @@
+import { PrismaEmailMessageRepository } from '@/repositories/prisma/prisma-email-message-repository'
+import { UpdateEmailMessageStatusUseCase } from '../update-email-message-status'
+
+export function UpdateEmailMessageFactoryUseCase() {
+  const prismaEmailMessageRepository = new PrismaEmailMessageRepository()
+  const sendEmailMessageUseCase = new UpdateEmailMessageStatusUseCase(
+    prismaEmailMessageRepository,
+  )
+
+  return sendEmailMessageUseCase
+}
