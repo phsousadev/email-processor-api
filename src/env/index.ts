@@ -4,6 +4,8 @@ import { z } from 'zod'
 const envSchema = z.object({
   NODE_ENV: z.enum(['dev', 'uat', 'production']).default('dev'),
   PORT: z.coerce.number().default(3001),
+  REDIS_PORT: z.coerce.number().default(6379),
+  REDIS_HOST: z.string().default('localhost'),
 })
 
 const _env = envSchema.safeParse(process.env)
