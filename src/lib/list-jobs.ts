@@ -1,17 +1,24 @@
 import { emailQueue } from '@/infra/queues/bull-mq'
 
 async function listJobs() {
-  const waiting = await emailQueue.getWaiting()
-  const active = await emailQueue.getActive()
-  const completed = await emailQueue.getCompleted()
-  const failed = await emailQueue.getFailed()
-  const delayed = await emailQueue.getDelayed()
+  const [waiting, active, completed, failed, delayed] = await Promise.all([
+    emailQueue.getWaiting(),
+    emailQueue.getActive(),
+    emailQueue.getCompleted(),
+    emailQueue.getFailed(),
+    emailQueue.getDelayed(),
+  ])
 
-  console.log('Waiting jobs:', waiting.length)
-  console.log('Active jobs:', active.length)
-  console.log('Completed jobs:', completed.length)
-  console.log('Failed jobs:', failed.length)
-  console.log('Delayed jobs:', delayed.length)
+  console.clear()
+  console.table([
+    { status: 'Waiting', count: waiting.length },
+    { status: 'Active', count: active.length },
+    { status: 'Completed', count: completed.length },
+    { status: 'Failed', count: failed.length },
+    { status: 'Delayed', count: delayed.length },
+  ])
 }
 
-listJobs()
+setInterval(() => {
+  listJobs().catch(console.error)
+}, 2000)
