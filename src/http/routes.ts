@@ -3,6 +3,7 @@ import { sendEmail } from './controllers/emails/send-email.controller'
 import { prometheusMetrics } from './controllers/prometheus/metrics.controller'
 import { findEmailById } from './controllers/emails/find-email-by-id.controller'
 import { reprocessEmail } from './controllers/emails/reprocess-email-message.controller'
+import { updateEmailMessage } from './controllers/emails/update-email.controller'
 
 export async function routes(app: FastifyInstance) {
   app.get('/', async (request, reply) => {
@@ -10,9 +11,10 @@ export async function routes(app: FastifyInstance) {
   })
 
   // Emails
-  app.post('/email', sendEmail)
-  app.get('/email/:emailId', findEmailById)
-  app.get('/email/:emailId/reprocess', reprocessEmail)
+  app.post('/emails', sendEmail)
+  app.get('/emails/:emailId', findEmailById)
+  app.get('/emails/:emailId/reprocess', reprocessEmail)
+  app.put('/emails/:emailId', updateEmailMessage)
 
   // Prometheus
   app.get('/metrics', prometheusMetrics)
