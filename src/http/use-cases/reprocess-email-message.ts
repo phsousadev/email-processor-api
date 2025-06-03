@@ -9,9 +9,11 @@ export class ReprocessEmailMessageUseCase {
 
     if (!email) return null
 
-    await emailProcessingQueue(email.id)
+    await emailProcessingQueue(email.id, true)
 
-    this.emailMessageRepository.updateStatus(emailId, 'PROCESSING')
+    const attemps = email.attempts + 1
+
+    this.emailMessageRepository.updateStatus(emailId, 'PROCESSING', attemps)
 
     return {
       email,

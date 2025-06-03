@@ -7,5 +7,6 @@ export interface EmailMessageRepository {
   updateStatus(
     emailId: string,
     status: EmailStatus,
+    attempts?: number,
   ): Promise<EmailMessage | null>
 }

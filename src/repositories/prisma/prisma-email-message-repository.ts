@@ -7,7 +7,10 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
     payload: Prisma.EmailMessageCreateInput,
   ): Promise<EmailMessage | null> {
     return await prisma.emailMessage.create({
-      data: payload,
+      data: {
+        attempts: 1,
+        ...payload,
+      },
     })
   }
 
@@ -26,11 +29,12 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
   async updateStatus(
     emailId: string,
     status: EmailStatus,
+    attempts?: number,
   ): Promise<EmailMessage | null> {
     try {
       return await prisma.emailMessage.update({
         where: { id: emailId },
-        data: { status },
+        data: { status, attempts },
       })
     } catch (error) {
       if (
