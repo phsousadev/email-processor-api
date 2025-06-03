@@ -19,12 +19,15 @@ export class EmailJobProcessor {
 
     this.logger.info({ emailId, jobId: job.id }, '[JOB]: Starting processing')
 
+    let statusLabel = 'success'
+
     try {
       const { email } = await findEmailMessageById.execute(emailId)
 
       if (!email) {
         const msg = `[JOB]: Email ${emailId} not found`
         this.logger.warn({ emailId, jobId: job.id }, msg)
+        statusLabel = 'failed'
         throw new Error(msg)
       }
 
@@ -33,7 +36,6 @@ export class EmailJobProcessor {
         '[JOB]: Simulating sending email',
       )
 
-      // Forcing a processing failure for testing purposes only
       const forceErrorEmailSubject = email.subject === 'forbidden subject'
       const success = forceErrorEmailSubject ? false : Math.random() < 0.8
 
@@ -42,6 +44,7 @@ export class EmailJobProcessor {
           { emailId, jobId: job.id, success },
           '[JOB]: Simulated sending failure',
         )
+        statusLabel = 'failed'
         throw new Error(
           forceErrorEmailSubject
             ? '[JOB]: forbidden subject'
@@ -54,19 +57,17 @@ export class EmailJobProcessor {
         status: 'SENT',
       })
 
-      jobProcessed.labels('success').inc()
-
       this.logger.info(
         { emailId, jobId: job.id, to: email.to },
         '[JOB]: Email processed successfully',
       )
     } catch (error) {
+      statusLabel = 'failed'
+
       await updateEmailMessageStatusUseCase.execute({
         emailId,
         status: 'FAILED',
       })
-
-      jobProcessed.labels('failed').inc()
 
       const saveEmailMessageLogErrorFactory = SaveEmailMessageLogErrorFactory()
 
@@ -85,7 +86,9 @@ export class EmailJobProcessor {
 
       throw error
     } finally {
-      end({ status: 'completed' })
+      jobProcessed.labels(statusLabel).inc()
+      end({ status: statusLabel })
+
       this.logger.info({ emailId, jobId: job.id }, '[JOB]: Finished processing')
     }
   }
