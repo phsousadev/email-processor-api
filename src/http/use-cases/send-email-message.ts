@@ -15,7 +15,7 @@ export class SendEmailMessageUseCase {
       to,
       subject,
       body,
-      status: 'SENT',
+      status: 'PENDING',
     })
 
     if (email?.id) await emailProcessingQueue(email.id)
