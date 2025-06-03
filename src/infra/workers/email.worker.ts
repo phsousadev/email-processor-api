@@ -1,20 +1,36 @@
 import { Worker } from 'bullmq'
 import { EmailJobProcessor } from '../jobs/email.job'
 import { env } from '@/env'
+import { app } from '@/app'
 
-const emailJobProcessor = new EmailJobProcessor()
+const emailJobProcessor = new EmailJobProcessor(app.log)
 
 export const worker = new Worker(
   'emailQueue',
   async (job) => {
-    console.log(
-      `[WORKER] Processing job ${job.id} in the queue ${job.queueName}`,
+    app.log.info(
+      { jobId: job.id, queue: job.queueName },
+      '[WORKER]: Processing job',
     )
-    await emailJobProcessor.process(job)
+
+    try {
+      await emailJobProcessor.process(job)
+      app.log.info(
+        { jobId: job.id, queue: job.queueName },
+        '[WORKER]: Job processed successfully',
+      )
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      app.log.error(
+        { jobId: job.id, queue: job.queueName, error: errorMessage },
+        '[WORKER]: Job processing failed',
+      )
+    }
   },
   {
     connection: { host: env.REDIS_HOST, port: env.REDIS_PORT },
   },
 )
 
-console.log('[WORKER] Email worker is running and waiting for jobs...')
+app.log.info('[WORKER]: Email worker is running and waiting for jobs...')

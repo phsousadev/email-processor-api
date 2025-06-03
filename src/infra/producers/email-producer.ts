@@ -1,10 +1,16 @@
 import { emailQueue } from '../queues/bull-mq'
+import { FastifyBaseLogger } from 'fastify'
 
 export async function emailProcessingQueue(
   emailId: string,
-  reprocess?: boolean,
+  logger: FastifyBaseLogger,
+  reprocess = false,
 ) {
-  if (reprocess) console.log(`[APP]: reprocessing email manually: ${emailId}`)
+  if (reprocess) {
+    logger.info({ emailId, reprocess }, '[APP]: Reprocessing email manually')
+  } else {
+    logger.info({ emailId }, '[APP]: Enqueuing email for processing')
+  }
 
   await emailQueue.add(
     'sendEmail',
@@ -14,4 +20,6 @@ export async function emailProcessingQueue(
       backoff: { type: 'exponential', delay: 5000 },
     },
   )
+
+  logger.info({ emailId, reprocess }, '[APP]: Email successfully enqueued')
 }

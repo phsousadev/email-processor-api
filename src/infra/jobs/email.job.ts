@@ -3,9 +3,10 @@ import { SaveEmailMessageLogErrorFactory } from '@/http/use-cases/factories/save
 import { UpdateEmailMessageStatusFactoryUseCase } from '@/http/use-cases/factories/update-email-message-status-factory'
 import { jobDuration, jobProcessed } from '@/lib/metrics'
 import { Job } from 'bullmq'
+import { FastifyBaseLogger } from 'fastify'
 
 export class EmailJobProcessor {
-  constructor() {}
+  constructor(private readonly logger: FastifyBaseLogger) {}
 
   async process(job: Job): Promise<void> {
     const { emailId } = job.data
@@ -16,32 +17,35 @@ export class EmailJobProcessor {
       UpdateEmailMessageStatusFactoryUseCase()
     const findEmailMessageById = FindEmailMessageByIdFactoryUseCase()
 
+    this.logger.info({ emailId, jobId: job.id }, '[JOB]: Starting processing')
+
     try {
       const { email } = await findEmailMessageById.execute(emailId)
 
       if (!email) {
-        throw new Error(`[JOB]: email ${emailId} not found`)
+        const msg = `[JOB]: Email ${emailId} not found`
+        this.logger.warn({ emailId, jobId: job.id }, msg)
+        throw new Error(msg)
       }
 
-      console.log(
-        `[JOB]: simulating sending email to: ${email.to} id: ${email.id}`,
+      this.logger.info(
+        { emailId, jobId: job.id, to: email.to },
+        '[JOB]: Simulating sending email',
       )
 
-      /**
-       * Forcing a processing failure for testing purposes only
-       */
+      // Forcing a processing failure for testing purposes only
       const forceErrorEmailSubject = email.subject === 'forbidden subject'
-
       const success = forceErrorEmailSubject ? false : Math.random() < 0.8
 
-      if (!success)
-        console.log(
-          `[JOB]: simulates sending failure to ${emailId}. sucess: ${success}`,
-        )
-
       if (!success) {
+        this.logger.warn(
+          { emailId, jobId: job.id, success },
+          '[JOB]: Simulated sending failure',
+        )
         throw new Error(
-          `${forceErrorEmailSubject ? '[JOB]: forbidden subject' : '[JOB]: simulated failure to send'}`,
+          forceErrorEmailSubject
+            ? '[JOB]: forbidden subject'
+            : '[JOB]: simulated failure to send',
         )
       }
 
@@ -52,8 +56,9 @@ export class EmailJobProcessor {
 
       jobProcessed.labels('success').inc()
 
-      console.log(
-        `[JOB]: email: ${email.to} id:${emailId} processed successfully.`,
+      this.logger.info(
+        { emailId, jobId: job.id, to: email.to },
+        '[JOB]: Email processed successfully',
       )
     } catch (error) {
       await updateEmailMessageStatusUseCase.execute({
@@ -68,15 +73,20 @@ export class EmailJobProcessor {
       const errorMessage =
         error instanceof Error ? error.message : String(error)
 
-      saveEmailMessageLogErrorFactory.execute({
+      await saveEmailMessageLogErrorFactory.execute({
         emailMessageId: emailId,
         errorMessage,
       })
 
-      console.error(`[JOB]: failed to process email ${emailId}`)
+      this.logger.error(
+        { emailId, jobId: job.id, error: errorMessage },
+        '[JOB]: Failed to process email',
+      )
+
       throw error
     } finally {
       end({ status: 'completed' })
+      this.logger.info({ emailId, jobId: job.id }, '[JOB]: Finished processing')
     }
   }
 }
