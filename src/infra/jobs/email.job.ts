@@ -1,4 +1,5 @@
 import { FindEmailMessageByIdFactoryUseCase } from '@/http/use-cases/factories/find-email-message-by-id-factory'
+import { SaveEmailMessageLogErrorFactory } from '@/http/use-cases/factories/save-email-message-error-log-factory'
 import { UpdateEmailMessageStatusFactoryUseCase } from '@/http/use-cases/factories/update-email-message-status-factory'
 import { jobDuration, jobProcessed } from '@/lib/metrics'
 import { Job } from 'bullmq'
@@ -54,6 +55,16 @@ export class EmailJobProcessor {
       })
 
       jobProcessed.labels('failed').inc()
+
+      const saveEmailMessageLogErrorFactory = SaveEmailMessageLogErrorFactory()
+
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+
+      saveEmailMessageLogErrorFactory.execute({
+        emailMessageId: emailId,
+        errorMessage,
+      })
 
       console.error(`[JOB]: failed to process email ${emailId}`)
       throw error
