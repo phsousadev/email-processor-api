@@ -27,7 +27,12 @@ export class EmailJobProcessor {
         `[JOB]: simulating sending email to: ${email.to} id: ${email.id}`,
       )
 
-      const success = Math.random() < 0.8
+      /**
+       * Forcing a processing failure for testing purposes only
+       */
+      const forceErrorEmailSubject = email.subject === 'forbidden subject'
+
+      const success = forceErrorEmailSubject ? false : Math.random() < 0.8
 
       if (!success)
         console.log(
@@ -35,7 +40,9 @@ export class EmailJobProcessor {
         )
 
       if (!success) {
-        throw new Error('[JOB]: simulated failure to send')
+        throw new Error(
+          `${forceErrorEmailSubject ? '[JOB]: forbidden subject' : '[JOB]: simulated failure to send'}`,
+        )
       }
 
       await updateEmailMessageStatusUseCase.execute({
