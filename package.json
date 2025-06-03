@@ -8,7 +8,8 @@
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
     "worker:dev": "tsx watch src/infra/workers/email.worker.ts",
-    "list:jobs": "tsx src/lib/list-jobs.ts"
+    "list:jobs": "tsx src/lib/list-jobs.ts",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "Pedro Sousa <pedrohigor.dev@gmail.com>",
@@ -20,7 +21,9 @@
     "prisma": "6.8.2",
     "tsup": "8.5.0",
     "tsx": "4.19.4",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "vite-tsconfig-paths": "5.1.4",
+    "vitest": "3.2.1"
   },
   "dependencies": {
     "@prisma/client": "6.8.2",
