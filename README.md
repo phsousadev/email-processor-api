@@ -115,4 +115,4 @@ Sinta-se à vontade para explorar e entender a base sólida que sustenta este pr
 ## 8. Explicação simples de como utilizar a API
 Acesse:
 
-➡️ [Como funciona](./utils/docs/architectural-decision.md)
+➡️ [Como funciona](./utils/docs/about.md)
