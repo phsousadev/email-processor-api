@@ -1,0 +1,165 @@
+type: collection.insomnia.rest/5.0
+name: email-processor-api
+meta:
+  id: wrk_2991825b5522429fa565f65f2eda61ff
+  created: 1748792746459
+  modified: 1748792746459
+collection:
+  - name: emails
+    meta:
+      id: fld_d1541404ec4341d4b2f61b67567145c4
+      created: 1748792752524
+      modified: 1748916536439
+      sortKey: -1748792752524
+    children:
+      - url: "{{ _.base_url }}/emails"
+        name: send-email
+        meta:
+          id: req_85e8aa66014f43f3b727da8010213e3f
+          created: 1748792763128
+          modified: 1748928508466
+          isPrivate: false
+          sortKey: -1748901474181
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"to": "test2@gmail.com",
+            	"subject": "deu certoooo",
+            	"body": "Assunto testeAssunto testeAssunto testeAssunto testeAssunto teste"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/emails/303d2b6a-889d-46ae-8451-c86f94221982"
+        name: find-email-by-id
+        meta:
+          id: req_32d85a720f5043248e28273d680b4add
+          created: 1748901474081
+          modified: 1748928343260
+          isPrivate: false
+          sortKey: -1748901474081
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/emails/303d2b6a-889d-46ae-8451-c86f94221982/reprocess"
+        name: reprocess-email
+        meta:
+          id: req_4351fb6a0f1b464bad782541bf0c429f
+          created: 1748916552747
+          modified: 1748928351897
+          isPrivate: false
+          sortKey: -1748901267030.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/emails/9f165a18-7204-4b7e-8328-614d44cc744e"
+        name: update-email
+        meta:
+          id: req_c234a0239e5b4a848a4ecb6da5afa24d
+          created: 1748923950687
+          modified: 1748924743900
+          isPrivate: false
+          sortKey: -1748901266930.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"to": "test2@gmail.com",
+            	"subject": "corrgindo email",
+            	"body": "Assunto testeAssunto testeAssunto testeAssunto testeAssunto teste"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: prometheus
+    meta:
+      id: fld_497cec310eda462b8e6c22e105ef0314
+      created: 1748901056738
+      modified: 1748948991045
+      sortKey: -1748901056738
+    children:
+      - url: "{{ _.base_url }}/metrics"
+        name: metrics
+        meta:
+          id: req_1df5af42a4bd437bb41e9a6a9f45f47b
+          created: 1748901059980
+          modified: 1748901074999
+          isPrivate: false
+          sortKey: -1748901059980
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.1.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_80ef9d67cd377cb08b8828776a4f6b40946e2c69
+    created: 1748792746464
+    modified: 1748792746464
+environments:
+  name: Base Environment
+  meta:
+    id: env_80ef9d67cd377cb08b8828776a4f6b40946e2c69
+    created: 1748792746462
+    modified: 1748792746462
+    isPrivate: false
+  subEnvironments:
+    - name: localhost
+      meta:
+        id: env_6d72822b859b4ce58fdb86c50ce0630f
+        created: 1748792782447
+        modified: 1748792819611
+        isPrivate: false
+        sortKey: 1748792782447
+      data:
+        base_url: http://localhost:3001
+      color: "#ff0000"
