@@ -16,3 +16,5 @@ export const worker = new Worker(
     connection: { host: env.REDIS_HOST, port: env.REDIS_PORT },
   },
 )
+
+console.log('[worker] Email worker is running and waiting for jobs...')
