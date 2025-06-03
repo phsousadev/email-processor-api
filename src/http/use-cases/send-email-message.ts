@@ -1,5 +1,6 @@
 import { emailProcessingQueue } from '@/infra/producers/email-producer'
 import { EmailMessageRepository } from '@/repositories/email-message-repository'
+import { FastifyBaseLogger } from 'fastify'
 
 interface ISendEmailMessageRequest {
   to: string
@@ -8,7 +9,10 @@ interface ISendEmailMessageRequest {
 }
 
 export class SendEmailMessageUseCase {
-  constructor(private emailMessageRepository: EmailMessageRepository) {}
+  constructor(
+    private emailMessageRepository: EmailMessageRepository,
+    private readonly logger: FastifyBaseLogger,
+  ) {}
 
   async execute({ to, subject, body }: ISendEmailMessageRequest) {
     const email = await this.emailMessageRepository.create({
@@ -18,7 +22,7 @@ export class SendEmailMessageUseCase {
       status: 'PENDING',
     })
 
-    if (email?.id) await emailProcessingQueue(email.id)
+    if (email?.id) await emailProcessingQueue(email.id, this.logger)
 
     return {
       email,
