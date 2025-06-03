@@ -19,17 +19,22 @@ export class EmailJobProcessor {
       const { email } = await findEmailMessageById.execute(emailId)
 
       if (!email) {
-        throw new Error(`[job]: email ${emailId} not found`)
+        throw new Error(`[JOB]: email ${emailId} not found`)
       }
 
       console.log(
-        `[job]: simulating sending email to: ${email.to} id: ${email.id}`,
+        `[JOB]: simulating sending email to: ${email.to} id: ${email.id}`,
       )
 
       const success = Math.random() < 0.8
 
+      if (!success)
+        console.log(
+          `[JOB]: simulates sending failure to ${emailId}. sucess: ${success}`,
+        )
+
       if (!success) {
-        throw new Error('[job]: simulated failure to send')
+        throw new Error('[JOB]: simulated failure to send')
       }
 
       await updateEmailMessageStatusUseCase.execute({
@@ -40,7 +45,7 @@ export class EmailJobProcessor {
       jobProcessed.labels('success').inc()
 
       console.log(
-        `[job]: email: ${email.to} id:${emailId} processed successfully.`,
+        `[JOB]: email: ${email.to} id:${emailId} processed successfully.`,
       )
     } catch (error) {
       await updateEmailMessageStatusUseCase.execute({
@@ -50,7 +55,7 @@ export class EmailJobProcessor {
 
       jobProcessed.labels('failed').inc()
 
-      console.error(`[job]: failed to process email ${emailId}`)
+      console.error(`[JOB]: failed to process email ${emailId}`)
       throw error
     } finally {
       end({ status: 'completed' })

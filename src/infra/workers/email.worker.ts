@@ -8,7 +8,7 @@ export const worker = new Worker(
   'emailQueue',
   async (job) => {
     console.log(
-      `[worker] Processing job ${job.id} in the queue ${job.queueName}`,
+      `[WORKER] Processing job ${job.id} in the queue ${job.queueName}`,
     )
     await emailJobProcessor.process(job)
   },
@@ -17,4 +17,4 @@ export const worker = new Worker(
   },
 )
 
-console.log('[worker] Email worker is running and waiting for jobs...')
+console.log('[WORKER] Email worker is running and waiting for jobs...')
