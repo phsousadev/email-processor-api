@@ -9,4 +9,8 @@ export interface EmailMessageRepository {
     status: EmailStatus,
     attempts?: number,
   ): Promise<EmailMessage | null>
+  updateEmail(
+    emailId: string,
+    payload: Prisma.EmailMessageUpdateInput,
+  ): Promise<EmailMessage | null>
 }

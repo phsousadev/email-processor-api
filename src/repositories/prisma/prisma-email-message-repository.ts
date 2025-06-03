@@ -46,4 +46,16 @@ export class PrismaEmailMessageRepository implements EmailMessageRepository {
       throw error
     }
   }
+
+  async updateEmail(
+    emailId: string,
+    payload: Prisma.EmailMessageUpdateInput,
+  ): Promise<EmailMessage | null> {
+    return await prisma.emailMessage.update({
+      where: {
+        id: emailId,
+      },
+      data: payload,
+    })
+  }
 }
