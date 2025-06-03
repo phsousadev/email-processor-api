@@ -3,9 +3,9 @@ import { UpdateEmailMessageStatusUseCase } from '../update-email-message-status'
 
 export function UpdateEmailMessageStatusFactoryUseCase() {
   const prismaEmailMessageRepository = new PrismaEmailMessageRepository()
-  const sendEmailMessageUseCase = new UpdateEmailMessageStatusUseCase(
+  const updateEmailStatusUseCase = new UpdateEmailMessageStatusUseCase(
     prismaEmailMessageRepository,
   )
 
-  return sendEmailMessageUseCase
+  return updateEmailStatusUseCase
 }
