@@ -97,3 +97,22 @@ cp .env.example .env
 ```bash
 npm run dev
 ```
+
+### 7. Consulte a documentação e arquitetura do projeto
+
+Para uma compreensão completa sobre as decisões técnicas, funcionamento e arquitetura deste projeto, acesse a documentação detalhada:
+
+➡️ [Decisão Arquitetural e Documentação Técnica](./utils/docs/architectural-decision.md)
+
+Este material contém:
+
+- Detalhamento das decisões arquiteturais.
+- Justificativas para escolha das tecnologias.
+- Estratégias de resiliência e escalabilidade.
+
+Sinta-se à vontade para explorar e entender a base sólida que sustenta este projeto!
+
+## 8. Explicação simples de como utilizar a API
+Acesse:
+
+➡️ [Como funciona](./utils/docs/architectural-decision.md)
